@@ -6,4 +6,4 @@ When we drive, we use our eyes to decide where to go.  The lines on the road tha
 In this project I will detect lane lines in images and videos using Python and OpenCV.
 
 
-**model file: Detect_Lane_Lines.ipynb**  
+* **model file: Detect_Lane_Lines.ipynb**  
