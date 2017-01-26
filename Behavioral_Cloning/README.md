@@ -24,21 +24,21 @@ I started collecting training data by driving a car in the simulator in training
 After much struggle, I settled to use what Udacity had shared.
 
 
-*driving_log.csv - each row in this sheet correlates the image with the steering angle, throttle, brake, and speed of the car.*
+**driving_log.csv - each row in this sheet correlates the image with the steering angle, throttle, brake, and speed of the car.**
 
 ![DrivingLog](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/drivinglog.png)
 
-*Look at few examples for left, center and right camera images*
+**Look at few examples for left, center and right camera images**
 
 ![SampleData1](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData1.png)  
 ![SampleData2](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData2.png)  
 ![SampleData3](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData3.png) 
 
-*Look at 18 center camera images for steering angles [-0.5, 0.5]*
+**Look at 18 center camera images for steering angles [-0.5, 0.5]**
 
 ![SampleData4](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData4.png)
 
-*Look at the distribution of steering angles*  
+**Look at the distribution of steering angles**  
 
 ![SteeringDistribution](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SteeringDist.png)
 
@@ -48,24 +48,24 @@ After much struggle, I settled to use what Udacity had shared.
 Data collected contains images sampled from the video, paired with the corresponding steering angle. Training with only collected data is not sufficient since most steering angles are 0. The car will drift off the road if it doesn't learn how to recover from the edges. Also, 8000 images will not likely be enough to build a network. Instead of collecting more data, I choose to augment them in the follwing ways: (many ideas are coming from this Keras Blog on [Building powerful image classification models using very little data](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html).)
 
 
-*Cropping and resizing to match Nvidia network input plane
+* Cropping and resizing to match Nvidia network input plane
 
 ![Pre-processing](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/preprocessing.png)
 
-*Random horizontal flips - for both image and steer angle
+* Random horizontal flips - for both image and steer angle
 
 ![RandomFlips](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/flip.png)
 
-*Changing brightness to simulate day and night conditions
+* Changing brightness to simulate day and night conditions
 
 ![Brightness](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/bright.png)
 
-*Shift the images and adjust steering angles
+* Shift the images and adjust steering angles
 
 ![Shift](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/shift.png)
 ![Shift2](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/shift2.png)
 
-*Using both left and right camera images to simulate the effect of car drifting off to the side and recovering
+* Using both left and right camera images to simulate the effect of car drifting off to the side and recovering
 
 
 ## Training
@@ -113,7 +113,5 @@ Validate the model by launching the simulator and entering autonomous mode.
 
 3. [John Chen's Agile Trainer](https://github.com/diyjac/AgileTrainer) - The Agile Trainer 
 
-4. [GTAV Universe](https://openai.com/blog/GTA-V-plus-Universe/) -   
-   [DeepGTAV](https://github.com/ai-tor/DeepGTAV) - 
+4. [GTAV Universe](https://openai.com/blog/GTA-V-plus-Universe/) & [DeepGTAV](https://github.com/ai-tor/DeepGTAV) - 
 > The Universe integration with Grand Theft Auto V, built and maintained by Craig Quiter's DeepDrive project, is now open-source. To use it, you'll just need a purchased copy of GTA V, and then your Universe agent will be able to start driving a car around the streets of a high-fidelity virtual world.
-
