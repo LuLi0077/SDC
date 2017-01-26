@@ -70,7 +70,7 @@ Data collected contains images sampled from the video, paired with the correspon
 
 ## Training
 
-Data is split 80/20 into train and validation sets. Then using image and batch generators to read data from each file, augment on the fly and use it to train/validate the model.
+Data is split 90/10 into train and validation sets. Then using image and batch generators to read data from each file, augment on the fly and use it to train/validate the model.
 
 Figure below shows the network architecture, which consists of 9 layers, including a normalization layer, 5 convolutional layers, and 3 fully connected layers.
 
