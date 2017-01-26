@@ -13,7 +13,7 @@ Similar approach had been tested on real cars by Nvidia according to [End-to-End
 
 
 ### Collecting Training Data
-<img src="ForREADME/Simulator.tiff" width="480" alt="Simulator" />
+![Simulator](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/Simulator.tiff)
 
 I started collecting training data by driving a car in the simulator in training mode:
 
@@ -23,18 +23,18 @@ I started collecting training data by driving a car in the simulator in training
 After much struggle, I settled to use what Udacity had shared.
 
 *driving_log.csv - each row in this sheet correlates the image with the steering angle, throttle, brake, and speed of the car.*
-<img src="drivinglog.png" width="480" alt="DrivingLog" />
+![DrivingLog](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/drivinglog.png)
 
 *Look at few examples for left, center and right camera images*
-<img src="SampleData1.png" width="480" alt="SampleData1" />
-<img src="SampleData2.png" width="480" alt="SampleData2" />
-<img src="SampleData3.png" width="480" alt="SampleData3" />
+![SampleData1](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData1.png)
+![SampleData2](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData2.png)
+![SampleData3](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData3.png)
 
 *Look at 18 center camera images for steering angles [-0.5, 0.5]*
-<img src="SampleData4.png" width="480" alt="SampleData4" />
+![SampleData4](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SampleData4.png)
 
 *Look at the distribution of steering angles*
-<img src="SteeringDist.png" width="480" alt="SteeringDistribution" />
+![SteeringDistribution](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/SteeringDist.png)
 
 
 ### Data pre-processing and augmentation
@@ -43,17 +43,17 @@ Data collected contains images sampled from the video, paired with the correspon
 
 
 *Cropping and resizing to match Nvidia network input plane
-<img src="preprocessing.png" width="480" alt="Pre-processing" />
+![Pre-processing](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/preprocessing.png)
 
 *Random horizontal flips - for both image and steer angle
-<img src="flip.png" width="480" alt="RandomFlips" />
+![RandomFlips](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/flip.png)
 
 *Changing brightness to simulate day and night conditions
-<img src="bright.png" width="480" alt="Brightness" />
+![Brightness](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/bright.png)
 
 *Shift the images and adjust steering angles
-<img src="shift.png" width="480" alt="Shift" />
-<img src="shift2.png" width="480" alt="Shift2" />
+![Shift](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/shift.png)
+![Shift2](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/shift2.png)
 
 *Using both left and right camera images to simulate the effect of car drifting off to the side and recovering
 
@@ -64,7 +64,7 @@ Data is split 80/20 into train and validation sets. Then using image and batch g
 
 Figure below shows the network architecture, which consists of 9 layers, including a normalization layer, 5 convolutional layers, and 3 fully connected layers.
 
-<img src="Nvidia-cnn-architecture.png" width="480" alt="Nvidia Network Architecture" />
+![Nvidia Network Architecture](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/Nvidia-cnn-architecture.png)
 
 More explaination from [Nvidia Blog](https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/)):
 
