@@ -13,7 +13,7 @@ Similar approach had been tested on real cars by Nvidia according to [End-to-End
 
 
 ### Collecting Training Data
-![Simulator](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/Simulator.tiff)
+![Simulator](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/Simulator.png)
 
 I started collecting training data by driving a car in the simulator in training mode:
 
