@@ -1,6 +1,8 @@
 # Advanced Lane Detection
 
-The goals / steps of this project are the following:
+Write a software pipeline to identify the lane boundaries in a video from a front-facing camera on a car.
+
+The steps of this project are the following:
 
 * Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.
 * Apply a distortion correction to raw images.
@@ -16,24 +18,24 @@ The goals / steps of this project are the following:
 
 #### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-OpenCV functions or other methods were used to calculate the correct camera matrix and distortion coefficients using the calibration chessboard images provided in the repository (note these are 9x6 chessboard images, unlike the 8x6 images used in the lesson). The distortion matrix should be used to un-distort one of the calibration images provided as a demonstration that the calibration is correct. Example of undistorted calibration image is Included in the writeup (or saved to a folder).
-
-The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
+`Advanced_Lane_Detection.ipynb` - *Step - 1*
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
-![Simulator](https://github.com/LuLi0077/SDC/blob/master/Behavioral_Cloning/ForREADME/Simulator.png)
+![CameraCalibration](SDC/Advanced_Lane_Detection/output_images/CameraCalibration.png)
 
 
 ### Pipeline (test images)
 
 #### 1. Provide an example of a distortion-corrected image.
 
+`Advanced_Lane_Detection.ipynb` - *Step - 2.a*
+
 Distortion correction that was calculated via camera calibration has been correctly applied to each image. An example of a distortion corrected image should be included in the writeup (or saved to a folder) and submitted with the project.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
+![DistortionCorrected](SDC/Advanced_Lane_Detection/output_images/DistortionCorrected.png)
 
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image. Provide an example of a binary image result.
