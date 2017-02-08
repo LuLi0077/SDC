@@ -24,7 +24,7 @@ I start by preparing "object points", which will be the (x, y, z) coordinates of
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
-![CameraCalibration](SDC/Advanced_Lane_Detection/output_images/CameraCalibration.png)
+![CameraCalibration](https://github.com/LuLi0077/SDC/blob/master/Advanced_Lane_Detection/output_images/CameraCalibration.png)
 
 
 ### Pipeline (test images)
@@ -35,16 +35,18 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 Distortion correction that was calculated via camera calibration has been correctly applied to each image. An example of a distortion corrected image should be included in the writeup (or saved to a folder) and submitted with the project.
 
-![DistortionCorrected](SDC/Advanced_Lane_Detection/output_images/DistortionCorrected.png)
+![DistortionCorrected](https://github.com/LuLi0077/SDC/blob/master/Advanced_Lane_Detection/output_images/DistortionCorrected.png)
 
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image. Provide an example of a binary image result.
+
+`Advanced_Lane_Detection.ipynb` - *Step - 2.b.6*
 
 A method or combination of methods (i.e., color transforms, gradients) has been used to create a binary image containing likely lane pixels. There is no "ground truth" here, just visual verification that the pixels identified as part of the lane lines are, in fact, part of the lines. Example binary images should be included in the writeup (or saved to a folder) and submitted with the project.
 
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
 
-![ThreshBinary](SDC/Advanced_Lane_Detection/output_images/ThreshBinary.png)
+![ThreshBinary](https://github.com/LuLi0077/SDC/blob/master/Advanced_Lane_Detection/output_images/ThreshBinary.png)
 
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
