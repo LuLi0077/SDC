@@ -29,6 +29,10 @@ I then used the output `objpoints` and `imgpoints` to compute the camera calibra
 
 ### Pipeline (test images)
 
+The main pipeline for test images is here: `Advanced_Lane_Detection.ipynb` - *Step - 2.g*.
+
+The testing process is as below:
+
 #### 1. Provide an example of a distortion-corrected image.
 
 `Advanced_Lane_Detection.ipynb` - *Step - 2.a*
@@ -91,16 +95,21 @@ Then I did some other stuff and fit my lane lines with a 2nd order polynomial ki
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
+`Advanced_Lane_Detection.ipynb` - *Step - 2.e*
+
 Here the idea is to take the measurements of where the lane lines are and estimate how much the road is curving and where the vehicle is located with respect to the center of the lane. The radius of curvature may be given in meters assuming the curve of the road follows a circle. For the position of the vehicle, you may assume the camera is mounted at the center of the car and the deviation of the midpoint of the lane from the center of the image is the offset you're looking for. As with the polynomial fitting, convert from pixels to meters.
 
-I did this in lines # through # in my code in `my_other_file.py`
 
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
+`Advanced_Lane_Detection.ipynb` - *Step - 2.f*
+
 The fit from the rectified image has been warped back onto the original image and plotted to identify the lane boundaries. This should demonstrate that the lane boundaries were correctly identified. An example image with lanes, curvature, and position from center should be included in the writeup (or saved to a folder) and submitted with the project.
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+
+[Output](https://github.com/LuLi0077/SDC/blob/master/Advanced_Lane_Detection/output_images/Output.png)
 
 
 ### Pipeline (video)
@@ -128,3 +137,4 @@ For a standout submission, students should follow the suggestion in the lesson t
 For an additional improvement students should implement outlier rejection and use a low-pass filter to smooth the lane detection over frames, meaning add each new detection to a weighted mean of the position of the lines to avoid jitter.
 
 For students who really want to go above and beyond, implement these methods on the challenge videos as well, or on your their own videos they've recorded themselves.
+
