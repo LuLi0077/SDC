@@ -109,7 +109,7 @@ The fit from the rectified image has been warped back onto the original image an
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-[Output](https://github.com/LuLi0077/SDC/blob/master/Advanced_Lane_Detection/output_images/Output.png)
+![Output](https://github.com/LuLi0077/SDC/blob/master/Advanced_Lane_Detection/output_images/Output.png)
 
 
 ### Pipeline (video)
@@ -128,13 +128,3 @@ Here's a [link to my video result](./project_video.mp4)
 Discussion includes some consideration of problems/issues faced, what could be improved about their algorithm/pipeline, and what hypothetical cases would cause their pipeline to fail.
 
 Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
-
-
-### Additional features
-
-For a standout submission, students should follow the suggestion in the lesson to not just search blindly for the lane lines in each frame of video, but rather, once they have a high-confidence detection, use that to inform the search for the position of the lines in subsequent frames of video. For example, if a polynomial fit was found to be robust in the previous frame, then rather than search the entire next frame for the lines, just a window around the previous detection could be searched. This will improve speed and provide a more robust method for rejecting outliers.
-
-For an additional improvement students should implement outlier rejection and use a low-pass filter to smooth the lane detection over frames, meaning add each new detection to a weighted mean of the position of the lines to avoid jitter.
-
-For students who really want to go above and beyond, implement these methods on the challenge videos as well, or on your their own videos they've recorded themselves.
-
