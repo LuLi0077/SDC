@@ -5,15 +5,25 @@ Write a software pipeline to identify vehicles in a video from a front-facing ca
 The major steps of this project are the following:
 
 * Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier Linear SVM classifier.
-* Optionally, apply a color transform and append binned color features, as well as histograms of color, to HOG feature vector. 
+* Apply a color transform and append binned color features, as well as histograms of color, to HOG feature vector. 
 * Implement a sliding-window technique and use trained classifier to search for vehicles in images.
 * Run the pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
 
-![CameraCalibration](https://github.com/LuLi0077/SDC/blob/master/Advanced_Lane_Detection/output_images/CameraCalibration.png)
 
 
-### Histogram of Oriented Gradients (HOG)
+### Feature Extraction
+
+#### 1. Read in vehicle and non-vehicle images (`Step - 1.a`)
+
+Sampled images from the following sources: 
+* [Annotated Driving Dataset](https://github.com/udacity/self-driving-car/tree/master/annotations): Dataset 1 and 2 (`Step - 1.a.1` - `Step - 1.a.4`)
+* [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/) (`Step - 1.a.5`)
+* [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html) (`Step - 1.a.5`)
+
+Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+
+![SampleImage](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/sampleimage.png)
 
 #### 1. Extracted HOG features from the training images.
 
@@ -23,9 +33,6 @@ Explanation given for methods used to extract HOG features, including which colo
 
 The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
 
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
-
-![alt text][image1]
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
