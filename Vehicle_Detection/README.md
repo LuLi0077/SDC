@@ -20,7 +20,7 @@ Sampled images from the following sources:
 * [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/): (`Step - 1.a.5`)
 * [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html): (`Step - 1.a.5`)
 
-Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
+Here is an example of one of each of the `vehicle` and `non-vehicle` classes, after resized to (64, 64):
 
 ![SampleImage](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/sampleimage.png)
 
@@ -41,34 +41,53 @@ Use the sample vehicle image above as an example, take a look at RGB, HSV and YU
 
 RGB                        |  HSV                      |  YUV
 :-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="200" height="200"> |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="200" height="200"> |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png" width="200" height="200"> 
+<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png" width="250" height="250"> 
 
 * Spatial binning of color: create the feature vector using cv2.resize().ravel() (`Step - 1.b.3`)
 
 
 #### c. Extracted HOG features (`Step - 1.c`)
 
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+* scikit-image HOG: below is the sample vehicle using HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` (`Step - 1.c.1`)
 
-Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
-
-
-![RGBcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png)
-
-![HSVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png)
-
-![YUVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png)
+![hogsample](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/hogsample.png)
 
 The HOG visualization is not actually the feature vector, but rather, a representation that shows the dominant gradient direction within each cell with brightness corresponding to the strength of gradients in that cell.
+
+* Combine and normalize features: combine color histograms, spatial binning of color and HOG feature then normalize them before training a classifier (`Step - 1.c.2`)
+
+Below shows sample vehicle and non-vehicle images with its raw and normalized features:
+
+![samplefeatures](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/samplefeatures.png)
 
 
 ### Build a Classifier
 
-Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+Multiple classifiers from sklearn are tested (`Step - 2.b`), as well as LeNet-5 from project [Traffic_Sign_Classification](https://github.com/LuLi0077/SDC/tree/master/Traffic_Sign_Classification) (`Step - 2.c`) using only 8000 images (4000/class). Various color space and HOG parameter combinations are also tested here (`Step - 2.a`), for example: 
 
-The HOG features extracted from the training data have been used to train a classifier, could be SVM, Decision Tree or other. Features should be scaled to zero mean and unit variance before training the classifier.
+For `colorspace = 'RGB'` and HOG paramters (orientations = 9, pixels_per_cell = 8, cells_per_block = 2, hog_channel = "ALL") - 
+* Test Accuracy of Nearest Neighbors = 0.83625 ; cost = 2.53
+* Test Accuracy of Linear SVM = 0.89625 ; cost = 29.35
+* Test Accuracy of RBF SVM = 0.9425 ; cost = 186.4
+* Test Accuracy of Gaussian Process = 0.535 ; cost = 1649.1
+* Test Accuracy of Decision Tree = 0.766875 ; cost = 36.73
+* Test Accuracy of Random Forest = 0.859375 ; cost = 3.51
+* Test Accuracy of Neural Net = 0.9375 ; cost = 20.56
+* Test Accuracy of AdaBoost = 0.749375 ; cost = 227.97
+* Test Accuracy of Naive Bayes = 0.80875 ; cost = 1.13
+* Test Accuracy of QDA = 0.555625 ; cost = 81.65
 
-I trained a linear SVM using...
+For `colorspace = 'YCrCb'` with the same HOG parameters -
+* Test Accuracy of Nearest Neighbors = 0.8275 ; cost = 2.12
+* Test Accuracy of Linear SVM = 0.914375 ; cost = 29.25
+* Test Accuracy of RBF SVM = 0.950625 ; cost = 183.56
+* Test Accuracy of Gaussian Process = 0.4975 ; cost = 1650.2
+* Test Accuracy of Decision Tree = 0.800625 ; cost = 32.38
+* Test Accuracy of Random Forest = 0.8725 ; cost = 3.33
+* Test Accuracy of Neural Net = 0.94875 ; cost = 19.66
+* Test Accuracy of AdaBoost = 0.795 ; cost = 197.83
+* Test Accuracy of Naive Bayes = 0.82 ; cost = 1.13
+* Test Accuracy of QDA = 0.5 ; cost = 80.67
 
 
 ### Sliding Window Search
