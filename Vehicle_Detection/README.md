@@ -13,21 +13,21 @@ The major steps of this project are the following:
 
 ### Feature Extraction
 
-#### a. Read in vehicle and non-vehicle images (`Step - 1.a`)
+#### a. Read in vehicle and non-vehicle images (`.ipynb`: `Step - 1.a`)
 
 Sampled images from the following sources: 
-* [Annotated Driving Dataset](https://github.com/udacity/self-driving-car/tree/master/annotations): Dataset 1 and 2 (`Step - 1.a.1` - `Step - 1.a.4`)
-* [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/): (`Step - 1.a.5`)
-* [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html): (`Step - 1.a.5`)
+* [Annotated Driving Dataset](https://github.com/udacity/self-driving-car/tree/master/annotations): Dataset 1 and 2 (`.ipynb`: `Step - 1.a.1` - `Step - 1.a.4`)
+* [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/): (`.ipynb`: `Step - 1.a.5`)
+* [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html): (`.ipynb`: `Step - 1.a.5`)
 
 Here is an example of one of each of the `vehicle` and `non-vehicle` classes, after resized to (64, 64):
 
 ![SampleImage](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/sampleimage.png)
 
 
-#### b. Extract color features (`Step - 1.b`)
+#### b. Extract color features (`.ipynb`: `Step - 1.b`)
 
-* Color histogram: use histograms of pixel intensity as features (`Step - 1.b.1`)
+* Color histogram: use histograms of pixel intensity as features (`.ipynb`: `Step - 1.b.1`)
 
 Use the sample vehicle image above as an example and assume RGB color space - 
 
@@ -35,7 +35,7 @@ Use the sample vehicle image above as an example and assume RGB color space -
 
 These, collectively, will be our feature vector for this image.
 
-* Explore color spaces: study the distribution of color values in an image by plotting each pixel in some color space (`Step - 1.b.2`)
+* Explore color spaces: study the distribution of color values in an image by plotting each pixel in some color space (`.ipynb`: `Step - 1.b.2`)
 
 Use the sample vehicle image above as an example, take a look at RGB, HSV and YUV color spaces - 
 
@@ -43,18 +43,18 @@ RGB                        |  HSV                      |  YUV
 :-------------------------:|:-------------------------:|:-------------------------:
 <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png" width="250" height="250"> 
 
-* Spatial binning of color: create the feature vector using cv2.resize().ravel() (`Step - 1.b.3`)
+* Spatial binning of color: create the feature vector using cv2.resize().ravel() (`.ipynb`: `Step - 1.b.3`)
 
 
-#### c. Extracted HOG features (`Step - 1.c`)
+#### c. Extracted HOG features (`.ipynb`: `Step - 1.c`)
 
-* scikit-image HOG: below is the sample vehicle using HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` (`Step - 1.c.1`)
+* scikit-image HOG: below is the sample vehicle using HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` (`.ipynb`: `Step - 1.c.1`)
 
 ![hogsample](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/hogsample.png)
 
 The HOG visualization is not actually the feature vector, but rather, a representation that shows the dominant gradient direction within each cell with brightness corresponding to the strength of gradients in that cell.
 
-* Combine and normalize features: combine color histograms, spatial binning of color and HOG feature then normalize them before training a classifier (`Step - 1.c.2`)
+* Combine and normalize features: combine color histograms, spatial binning of color and HOG feature then normalize them before training a classifier (`.ipynb`: `Step - 1.c.2`)
 
 Below shows sample vehicle and non-vehicle images with its raw and normalized features:
 
@@ -63,7 +63,7 @@ Below shows sample vehicle and non-vehicle images with its raw and normalized fe
 
 ### Build a Classifier
 
-Multiple classifiers from sklearn are tested (`Step - 2.b`), as well as LeNet-5 from project [Traffic_Sign_Classification](https://github.com/LuLi0077/SDC/tree/master/Traffic_Sign_Classification) (`Step - 2.c`) using only 8000 images (4000/class). Various color space and HOG parameter combinations are also tested here (`Step - 2.a`), for example: 
+Multiple classifiers from sklearn are tested (`.ipynb`: `Step - 2.b`), as well as LeNet-5 from project [Traffic_Sign_Classification](https://github.com/LuLi0077/SDC/tree/master/Traffic_Sign_Classification) (`.ipynb`: `Step - 2.c`) using only 8000 images (4000/class). Various color space and HOG parameter combinations are also tested here (`.ipynb`: `Step - 2.a`), for example: 
 
 For `colorspace = 'RGB'` and HOG paramters (orientations = 9, pixels_per_cell = 8, cells_per_block = 2, hog_channel = "ALL") - 
 * Test Accuracy of Nearest Neighbors = 0.83625 ; cost = 2.53
@@ -88,6 +88,15 @@ For `colorspace = 'YCrCb'` with the same HOG parameters -
 * Test Accuracy of AdaBoost = 0.795 ; cost = 197.83
 * Test Accuracy of Naive Bayes = 0.82 ; cost = 1.13
 * Test Accuracy of QDA = 0.5 ; cost = 80.67
+
+A different sampling approach is used shown in (`.ipynb`: `Step - 1.a.4.2` and `Step - 1.a.5.2`) -
+* When dealing with image data that was extracted from video, there may be sequences of images where the target object (vehicles in this case) appear almost identical in a whole series of images. Sample train and test data from different sources to avoid same images showing up in both sets.
+* Increased train set to 20k and test set to 4k images.
+
+After this new sampling strategy - Test Accuracy of LeNet = 0.84450:
+![LeNet](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/LeNet.png)
+
+Neural Net in sklearn seems to work the best and it is used for further testing and tuning. The final classifier selected has test accuracy = .91. (`.ipynb`: `Step - 2.b.1`),
 
 
 ### Sliding Window Search
