@@ -39,6 +39,16 @@ These, collectively, will be our feature vector for this image.
 
 Use the sample vehicle image above as an example, take a look at RGB, HSV and YUV color spaces - 
 
+RGB                        |  HSV                      |  YUV
+:-------------------------:|:-------------------------:|:-------------------------:
+<img src="github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="100" height="100"> |  <img src="github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="100" height="100"> |  <img src="github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png" width="100" height="100">. 
+
+
+
+
+
+
+
 ![RGBcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png)
 
 ![HSVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png)
@@ -55,7 +65,7 @@ I then explored different color spaces and different `skimage.hog()` parameters 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 
-
+![YUVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png)
 
 The HOG visualization is not actually the feature vector, but rather, a representation that shows the dominant gradient direction within each cell with brightness corresponding to the strength of gradients in that cell.
 
