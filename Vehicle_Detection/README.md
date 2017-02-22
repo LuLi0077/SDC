@@ -1,6 +1,6 @@
 # Vehicle Detection
 
-Write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The notebook contain all the details is here: Vehicle_Detection.ipynb.
+Write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The notebook contain all the details is here: `Vehicle_Detection.ipynb`.
 
 The major steps of this project are the following:
 
@@ -11,42 +11,56 @@ The major steps of this project are the following:
 * Estimate a bounding box for vehicles detected.
 
 
-
 ### Feature Extraction
 
-#### 1. Read in vehicle and non-vehicle images (`Step - 1.a`)
+#### a. Read in vehicle and non-vehicle images (`Step - 1.a`)
 
 Sampled images from the following sources: 
 * [Annotated Driving Dataset](https://github.com/udacity/self-driving-car/tree/master/annotations): Dataset 1 and 2 (`Step - 1.a.1` - `Step - 1.a.4`)
-* [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/) (`Step - 1.a.5`)
-* [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html) (`Step - 1.a.5`)
+* [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/): (`Step - 1.a.5`)
+* [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html): (`Step - 1.a.5`)
 
 Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
 ![SampleImage](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/sampleimage.png)
 
-#### 1. Extracted HOG features from the training images.
 
-Explain how (and identify where in your code) you extracted HOG features from the training images. Explain how you settled on your final choice of HOG parameters.
+#### b. Extract color features (`Step - 1.b`)
 
-Explanation given for methods used to extract HOG features, including which color space was chosen, which HOG parameters (orientations, pixels_per_cell, cells_per_block), and why.
+* Color histogram: use histograms of pixel intensity as features (`Step - 1.b.1`)
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+Use the sample vehicle image above as an example and assume RGB color space - 
 
+![histogramfeature](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/histogramfeature.png)
+
+These, collectively, will be our feature vector for this image.
+
+* Explore color spaces: study the distribution of color values in an image by plotting each pixel in some color space (`Step - 1.b.2`)
+
+Use the sample vehicle image above as an example, take a look at RGB, HSV and YUV color spaces - 
+
+![RGBcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png)
+
+![HSVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png)
+
+![YUVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png)
+
+* Spatial binning of color: create the feature vector using cv2.resize().ravel() (`Step - 1.b.3`)
+
+
+#### c. Extracted HOG features (`Step - 1.c`)
 
 I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
 
-![alt text][image2]
-
-Explain how you settled on your final choice of HOG parameters
-
-I tried various combinations of parameters and...
 
 
-#### 2. Train a classifier using selected HOG features
+The HOG visualization is not actually the feature vector, but rather, a representation that shows the dominant gradient direction within each cell with brightness corresponding to the strength of gradients in that cell.
+
+
+### Build a Classifier
 
 Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
