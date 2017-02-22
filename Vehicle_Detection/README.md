@@ -41,19 +41,7 @@ Use the sample vehicle image above as an example, take a look at RGB, HSV and YU
 
 RGB                        |  HSV                      |  YUV
 :-------------------------:|:-------------------------:|:-------------------------:
-<img src="github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="100" height="100"> |  <img src="github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="100" height="100"> |  <img src="github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png" width="100" height="100">. 
-
-
-
-
-
-
-
-![RGBcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png)
-
-![HSVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png)
-
-![YUVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png)
+<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="200" height="200"> |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="200" height="200"> |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png" width="200" height="200"> 
 
 * Spatial binning of color: create the feature vector using cv2.resize().ravel() (`Step - 1.b.3`)
 
@@ -64,6 +52,10 @@ I then explored different color spaces and different `skimage.hog()` parameters 
 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
+
+![RGBcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png)
+
+![HSVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png)
 
 ![YUVcolorspace](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png)
 
