@@ -1,11 +1,11 @@
 # Vehicle Detection
 
-Write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The notebook contain all the details is here: `Vehicle_Detection.ipynb`.
+Write a software pipeline to identify vehicles in a video from a front-facing camera on a car. The notebook contains all the details: `Vehicle_Detection.ipynb`.
 
 The major steps of this project are the following:
 
-* Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier Linear SVM classifier.
-* Apply a color transform and append binned color features, as well as histograms of color, to HOG feature vector. 
+* Perform feature extraction, including histogram of oriented gradients (HOG), binned color features and histograms of color, on a labeled training set of images. 
+* Train a classifier.
 * Implement a sliding-window technique and use trained classifier to search for vehicles in images.
 * Run the pipeline on a video stream and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
 * Estimate a bounding box for vehicles detected.
@@ -20,7 +20,11 @@ Sampled images from the following sources:
 * [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/): (`.ipynb`: `Step - 1.a.5`)
 * [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html): (`.ipynb`: `Step - 1.a.5`)
 
-Here is an example of one of each of the `vehicle` and `non-vehicle` classes, after resized to (64, 64):
+`Step - 1.a.(4 & 5).1` and `Step - 1.a.(4 & 5).2` used two different samping approach. `Step - 1.a.(4 & 5).1` combines all the data, then sample a portion of it, before splitting to train vs test. `Step - 1.a.(4 & 5).2` used separately sources for train vs test purposes. Both were tested and `Step - 1.a.(4 & 5).2` is choosen for building the classifier. 
+* When dealing with image data that was extracted from video, there may be sequences of images where the target object (vehicles in this case) appear almost identical in a whole series of images. Sample train and test data from different sources to avoid same images showing up in both sets.
+* `Step - 1.a.(4 & 5).2` also increased train set to 20k and test set to 4k images.
+
+Here is an example of two of each of the `vehicle` and `non-vehicle` classes, after resized to (64, 64):
 
 ![SampleImage](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/sampleimage.png)
 
@@ -29,26 +33,26 @@ Here is an example of one of each of the `vehicle` and `non-vehicle` classes, af
 
 * Color histogram: use histograms of pixel intensity as features (`.ipynb`: `Step - 1.b.1`)
 
-Use the sample vehicle image above as an example and assume RGB color space - 
+Use the first sample vehicle image above (top left) as an example and assume RGB color space - 
 
 ![histogramfeature](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/histogramfeature.png)
 
-These, collectively, will be our feature vector for this image.
+These, collectively, will be one of our feature vectors for this image.
 
 * Explore color spaces: study the distribution of color values in an image by plotting each pixel in some color space (`.ipynb`: `Step - 1.b.2`)
 
-Use the sample vehicle image above as an example, take a look at RGB, HSV and YUV color spaces - 
+Use the same vehicle image above as an example, take a look at RGB, HSV and YCrCb color spaces - 
 
-RGB                        |  HSV                      |  YUV
+RGB                        |  HSV                      |  YCrCb
 :-------------------------:|:-------------------------:|:-------------------------:
-<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YUVcolorspace.png" width="250" height="250"> 
+<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/RGBcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/HSVcolorspace.png" width="250" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/YCrCbcolorspace.png" width="250" height="250"> 
 
 * Spatial binning of color: create the feature vector using cv2.resize().ravel() (`.ipynb`: `Step - 1.b.3`)
 
 
 #### c. Extracted HOG features (`.ipynb`: `Step - 1.c`)
 
-* scikit-image HOG: below is the sample vehicle using HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` (`.ipynb`: `Step - 1.c.1`)
+* scikit-image HOG: below is the sample vehicle using HOG parameters of `orientations`, `pixels_per_cell` and `cells_per_block` (`.ipynb`: `Step - 1.c.1`)
 
 ![hogsample](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/hogsample.png)
 
@@ -63,7 +67,7 @@ Below shows sample vehicle and non-vehicle images with its raw and normalized fe
 
 ### Build a Classifier
 
-Multiple classifiers from sklearn are tested (`.ipynb`: `Step - 2.b`), as well as LeNet-5 from project [Traffic_Sign_Classification](https://github.com/LuLi0077/SDC/tree/master/Traffic_Sign_Classification) (`.ipynb`: `Step - 2.c`) using only 8000 images (4000/class). Various color space and HOG parameter combinations are also tested here (`.ipynb`: `Step - 2.a`), for example: 
+Multiple classifiers from sklearn are tested (`.ipynb`: `Step - 2.b.1`), as well as LeNet-5 from project [Traffic_Sign_Classification](https://github.com/LuLi0077/SDC/tree/master/Traffic_Sign_Classification) (`.ipynb`: `Step - 2.c`) and Keras from [Behavioral_Cloning](https://github.com/LuLi0077/SDC/tree/master/Behavioral_Cloning)  (`.ipynb`: `Step - 2.d`) . Various color space and HOG parameter combinations are also tested here (`.ipynb`: `Step - 2.a`), for example (using only 8000 images (4000/class) (with `Step - 1.a.(4 & 5).1` sampling approach)):  
 
 For `colorspace = 'RGB'` and HOG paramters (orientations = 9, pixels_per_cell = 8, cells_per_block = 2, hog_channel = "ALL") - 
 * Test Accuracy of Nearest Neighbors = 0.83625 ; cost = 2.53
@@ -89,21 +93,23 @@ For `colorspace = 'YCrCb'` with the same HOG parameters -
 * Test Accuracy of Naive Bayes = 0.82 ; cost = 1.13
 * Test Accuracy of QDA = 0.5 ; cost = 80.67
 
-A different sampling approach is used shown in (`.ipynb`: `Step - 1.a.4.2` and `Step - 1.a.5.2`) -
-* When dealing with image data that was extracted from video, there may be sequences of images where the target object (vehicles in this case) appear almost identical in a whole series of images. Sample train and test data from different sources to avoid same images showing up in both sets.
-* Increased train set to 20k and test set to 4k images.
+With the larger training set:
 
-After this new sampling strategy - Test Accuracy of LeNet = 0.84450:
+* Test Accuracy of LeNet = 0.82675: (`.ipynb`: `Step - 2.c`)
 ![LeNet](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/LeNet.png)
 
-Neural Net in sklearn seems to work the best and it is used for further testing and tuning. The final classifier selected has test accuracy = .91 (`.ipynb`: `Step - 2.b.1`).
+* In sklearn classifiers, Neural Net seems to work the best with test accuracy = .915 (`.ipynb`: `Step - 2.b.3`)
+
+* Test Accuracy of Keras model = 0.91725: (`.ipynb`: `Step - 2.d`)
+
+Though Keras model present a very straight forward approach for this project, I'll test sliding window search anyways.  
 
 
 ### Sliding Window Search
 
 #### 1. Search and classify
 
-Slide (64, 64) window with 50% overlap over the bottom half of the image. Within each window, extra features, predict its class use the classifier above and draw boxes on where it's classified as a car. (`.ipynb`: `Step - 3.a`)
+Slide (64, 64) window with 50% overlap over the bottom half of the image. Within each window, extract features, predict its class use the classifier above and draw boxes on where it's classified as a car. (`.ipynb`: `Step - 3.a`)
 
 Image 1                    |  Image 2                    
 :-------------------------:|:-------------------------:
@@ -119,22 +125,36 @@ Image 1                    |  Image 2
 :-------------------------:|:-------------------------:
 <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/heatmap1.png" width="400" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/heatmap2.png" width="400" height="250">  
 
-The "hot" parts of the map are where the cars are, and by imposing a threshold, we can reject areas affected by false positives. The outputs are here:
+The "hot" parts of the map are where the cars are, and by imposing a threshold, we can reject areas affected by false positives. I also put further restriction on the box size - if it's too small, it can't be a car. The outputs are here:
 
 Image 1                    |  Image 2                    
 :-------------------------:|:-------------------------:
 <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/box1.png" width="400" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/box2.png" width="400" height="250">  
 
-I also put further restriction on the box size - if it's too small, it can't be a car. 
-
 
 ### Video Implementation (`.ipynb`: `Step - 4`)
+
+#### 1. Sliding window + classifier approach (`.ipynb`: `Step - 4.a`)
+
+Tracking for identified vehicles/boxes in previous three frames, adding them into newly predicted heatmap in a sliding skill, giving more weight to more recent frames. Set threshold to 5.  
+
+#### 2. Keras model approach (`.ipynb`: `Step - 4.b`)
+
+Instead of using the classifier, predicting with the saved Keras model (`Keras.h5`) and tracking previous boxes. This is used for the final project video.  
 
 Here's a [link to my video result](./project_video.mp4)
 
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+Things I tried and things can be further tested:
+* Tried different data sources and sampling methods: could incorporate distortion correction and data augmentation
+* Tested different features for the classifier: mix of color channels can be extracted through a better selection process
+* Tested a list of classifiers, mostly with default setting: better hyper parameter tuning or blending of several classifiers may improve the accuracy
+* Tested couple of CNNs: as always, many more existing networks can be tested
+* For the sliding window implementation, a constant window size was used: a better approach would be using bigger windows near the bottom of the image and increse as it gets further away
+* Could leverage [Advanced Lane Detection](https://github.com/LuLi0077/SDC/tree/master/Advanced_Lane_Detection) more to transform perspective and classify vehicles within each lane line. And address the issue of false positive on shadowy areas by applying color transforms and gradients.
+* False positive rate can be futher reduced by more robust setting for area of interest, they are hard-coded in this project which may not work well in other situations. 
+* Although not relevant for this video, classify and track multiple classes will be more useful in practice, e.g. traffic lights, pedestrians and signs.
 
-
+This is a fun project and a lot more can be done.
