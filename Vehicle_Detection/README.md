@@ -96,57 +96,45 @@ A different sampling approach is used shown in (`.ipynb`: `Step - 1.a.4.2` and `
 After this new sampling strategy - Test Accuracy of LeNet = 0.84450:
 ![LeNet](https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/LeNet.png)
 
-Neural Net in sklearn seems to work the best and it is used for further testing and tuning. The final classifier selected has test accuracy = .91. (`.ipynb`: `Step - 2.b.1`),
+Neural Net in sklearn seems to work the best and it is used for further testing and tuning. The final classifier selected has test accuracy = .91 (`.ipynb`: `Step - 2.b.1`).
 
 
 ### Sliding Window Search
 
-#### 1. Describe how and identify where in the code you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+#### 1. Search and classify
 
-I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
+Slide (64, 64) window with 50% overlap over the bottom half of the image. Within each window, extra features, predict its class use the classifier above and draw boxes on where it's classified as a car. (`.ipynb`: `Step - 3.a`)
 
-A sliding window approach has been implemented, where overlapping tiles in each test image are classified as vehicle or non-vehicle. Some justification has been given for the particular implementation chosen.
+Image 1                    |  Image 2                    
+:-------------------------:|:-------------------------:
+<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/slidewindow1.png" width="400" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/slidewindow2.png" width="400" height="250">  
 
-![alt text][image3]
+A more efficient approach is using sub-sampling window search. It extract hog features once and then can be sub-sampled to get all of its overlaying windows. Each window is defined by a scaling factor where a scale of 1 would result in a window that's 8 x 8 cells then the overlap of each window is in terms of the cell distance. This means that a cells_per_step = 2 would result in a search window overlap of 75%.  (`.ipynb`: `Step - 3.b`)
 
-#### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
+#### 2. Multiple detections & false positives (`.ipynb`: `Step - 3.c`)
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Use a heat-map from detections in order to combine overlapping detections and remove false positives. Heat-map is simply adding "heat" (+=1) for all pixels within windows where a positive detection is reported by your classifier. The individual heat-maps for the above images look like this:
 
-Some discussion is given around how you improved the reliability of the classifier i.e., fewer false positives and more reliable car detections (this could be things like choice of feature vector, thresholding the decision function, hard negative mining etc.)
+Image 1                    |  Image 2                    
+:-------------------------:|:-------------------------:
+<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/heatmap1.png" width="400" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/heatmap2.png" width="400" height="250">  
 
-![alt text][image4]
+The "hot" parts of the map are where the cars are, and by imposing a threshold, we can reject areas affected by false positives. The outputs are here:
+
+Image 1                    |  Image 2                    
+:-------------------------:|:-------------------------:
+<img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/box1.png" width="400" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Vehicle_Detection/output_images/box2.png" width="400" height="250">  
+
+I also put further restriction on the box size - if it's too small, it can't be a car. 
 
 
-### Video Implementation
+### Video Implementation (`.ipynb`: `Step - 4`)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
 Here's a [link to my video result](./project_video.mp4)
-
-
-#### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
-
-A method, such as requiring that a detection be found at or near the same position in several subsequent frames, (could be a heat map showing the location of repeat detections) is implemented as a means of rejecting false positives, and this demonstrably reduces the number of false positives. Same or similar method used to draw bounding boxes (or circles, cubes, etc.) around high-confidence detections where multiple overlapping detections occur.
-
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.  
-
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
-
-##### Here are six frames and their corresponding heatmaps:
-
-![alt text][image5]
-
-##### Here is the output of `scipy.ndimage.measurements.label()` on the integrated heatmap from all six frames:
-![alt text][image6]
-
-##### Here the resulting bounding boxes are drawn onto the last frame in the series:
-![alt text][image7]
 
 
 ### Discussion
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
 
-As an optional challenge Once you have a working pipeline for vehicle detection, add in your lane-finding algorithm from the last project to do simultaneous lane-finding and vehicle detection!
