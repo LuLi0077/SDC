@@ -20,8 +20,8 @@ Sampled images from the following sources:
 * [KITTI vision benchmark suite](http://www.cvlibs.net/datasets/kitti/): (`.ipynb`: `Step - 1.a.5`)
 * [GTI vehicle image database](http://www.gti.ssr.upm.es/data/Vehicle_database.html): (`.ipynb`: `Step - 1.a.5`)
 
-`Step - 1.a.(4 & 5).1` and `Step - 1.a.(4 & 5).2` used two different samping approach. `Step - 1.a.(4 & 5).1` combines all the data, then sample a portion of it, before splitting to train vs test. `Step - 1.a.(4 & 5).2` used separately sources for train vs test purposes. Both were tested and `Step - 1.a.(4 & 5).2` is choosen for building the classifier. 
-* When dealing with image data that was extracted from video, there may be sequences of images where the target object (vehicles in this case) appear almost identical in a whole series of images. Sample train and test data from different sources to avoid same images showing up in both sets.
+`Step - 1.a.(4 & 5).1` and `Step - 1.a.(4 & 5).2` used two different samping approach. `Step - 1.a.(4 & 5).1` combines all the data, then samples a portion of it, before splitting to train vs test sets. `Step - 1.a.(4 & 5).2` used separate sources for train vs test purposes. Both were tested and `Step - 1.a.(4 & 5).2` is chosen for building the classifier. 
+* When dealing with image data that was extracted from video, there may be sequences of images where the target object (vehicles in this case) appear almost identical in a whole series of images. Sample train and test data from different sources to avoid the same images showing up in both sets.
 * `Step - 1.a.(4 & 5).2` also increased train set to 20k and test set to 4k images.
 
 Here is an example of two of each of the `vehicle` and `non-vehicle` classes, after resized to (64, 64):
@@ -100,7 +100,7 @@ With the larger training set:
 
 * In sklearn classifiers, Neural Net seems to work the best with test accuracy = .915 (`.ipynb`: `Step - 2.b.3`)
 
-* Test Accuracy of Keras model = 0.91725: (`.ipynb`: `Step - 2.d`)
+* Test Accuracy of Keras model = 0.92275: (`.ipynb`: `Step - 2.d`)
 
 Though Keras model present a very straight forward approach for this project, I'll test sliding window search anyways.  
 
@@ -142,7 +142,7 @@ Tracking for identified vehicles/boxes in previous three frames, adding them int
 
 Instead of using the classifier, predicting with the saved Keras model (`Keras.h5`) and tracking previous boxes. This is used for the final project video.  
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](https://youtu.be/LeWXeLtcxY0).
 
 
 ### Discussion
@@ -152,7 +152,7 @@ Things I tried and things can be further tested:
 * Tested different features for the classifier: mix of color channels can be extracted through a better selection process
 * Tested a list of classifiers, mostly with default setting: better hyper parameter tuning or blending of several classifiers may improve the accuracy
 * Tested couple of CNNs: as always, many more existing networks can be tested
-* For the sliding window implementation, a constant window size was used: a better approach would be using bigger windows near the bottom of the image and increse as it gets further away
+* For the sliding window implementation, a constant window size was used. A better approach would be using bigger windows near the bottom of the image and decrease the window as the car gets further away
 * Could leverage [Advanced Lane Detection](https://github.com/LuLi0077/SDC/tree/master/Advanced_Lane_Detection) more to transform perspective and classify vehicles within each lane line. And address the issue of false positive on shadowy areas by applying color transforms and gradients.
 * False positive rate can be futher reduced by more robust setting for area of interest, they are hard-coded in this project which may not work well in other situations. 
 * Although not relevant for this video, classify and track multiple classes will be more useful in practice, e.g. traffic lights, pedestrians and signs.
