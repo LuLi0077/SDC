@@ -9,7 +9,7 @@ Here's an overview of the [fusion flow](https://www.youtube.com/watch?v=_u8Vk58V
 
 Original                   |  EKF uses a linear appx of h(x)                     
 :-------------------------:|:-------------------------:
-<img src="https://github.com/LuLi0077/SDC/blob/master/Kalman_Filters/images/EKF1.png" width="400" height="250">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Kalman_Filters/images/EKF2.png" width="400" height="250">  
+<img src="https://github.com/LuLi0077/SDC/blob/master/Kalman_Filters/images/EKF1.png" width="425" height="300">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Kalman_Filters/images/EKF2.png" width="425" height="300">  
 
 In the original graph, follow the arrows from top left to bottom to top right: (1) A Gaussian from 10,000 random values in a normal distribution with a mean of 0. (2) Using a nonlinear function, arctan, to transform each value. (3) The resulting distribution. The second graph shows the output remains a Gaussian after applying a first order Taylor expansion. ([source](https://www.youtube.com/watch?v=nMUd_esBMM8))
 
