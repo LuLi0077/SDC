@@ -19,8 +19,13 @@ The comparison between KF and EKF: ([source](https://www.youtube.com/watch?v=co0
 ![KF_EKF](https://github.com/LuLi0077/SDC/blob/master/Kalman_Filters/images/KF_EKF.jpg)
 
 
-### [Unscented Kalman Filter](https://en.wikipedia.org/wiki/Kalman_filter#Unscented_Kalman_filter)
-(WIP)
+### Unscented Kalman Filter
+
+When the state transition and observation models — that is, the predict and update functions f and h — are highly non-linear, the extended Kalman filter can give particularly poor performance. This is because the covariance is propagated through linearization of the underlying non-linear model. The unscented Kalman filter (UKF) uses a deterministic sampling technique known as the unscented transform to pick a minimal set of sample points (called sigma points) around the mean. These sigma points are then propagated through the non-linear functions, from which a new mean and covariance estimate are then formed. The result is a filter which, for certain systems, more accurately estimates the true mean and covariance. This can be verified with Monte Carlo sampling or Taylor series expansion of the posterior statistics. In addition, this technique removes the requirement to explicitly calculate Jacobians, which for complex functions can be a difficult task in itself (i.e., requiring complicated derivatives if done analytically or being computationally costly if done numerically), if not impossible (if those functions are not differentiable). ([source](https://en.wikipedia.org/wiki/Kalman_filter#Unscented_Kalman_filter))
+
+Constant Turn Rate and Velocity Magnitude Model  |  UKF Roadmap                    
+:-----------------------------------------------:|:------------------------------------------------:
+<img src="https://github.com/LuLi0077/SDC/blob/master/Kalman_Filters/images/CTRV.png" width="425" height="300">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Kalman_Filters/images/UKF.png" width="425" height="300">  
 
 
 ### Resources
