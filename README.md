@@ -15,11 +15,14 @@ detect lane lines in a variety of conditions, including changing road surfaces, 
 ### Vehicle_Detection
 detect vehicles in a video from a front-facing camera on a car
 
-### Pedestrian_Tracking
-fuse noisy lidar and radar data together to track a pedestrian
+### Kalman_Filters
+implement Extended Kalman Filter (EKF) and Unscented Kalman Filter (UKF) for sensor fusion
 
 ### Kidnapped_Vehicle
 implement a particle filter to take real-world data and localize a lost vehicle
 
-### Lane_Keeping
-implement a controller to keep a simulated vehicle in its lane
+### PID_Control
+implement a PID controller to race around the lake track
+
+### Model_Predictive_Control
+implement Model Predictive Control to drive the car around the track
