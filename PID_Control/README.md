@@ -2,17 +2,18 @@
 
 Implement a PID controller to race around the lake track. 
 
-![PID](https://en.wikipedia.org/wiki/PID_controller#/media/File:PID_en.svg)
+![PID](PID.png)
 
-(A block diagram of a PID controller in a feedback loop. r(t) is the desired process value or "set point", and y(t) is the measured process value.)
+([source](https://en.wikipedia.org/wiki/PID_controller#/media/File:PID_en.svg): A block diagram of a PID controller in a feedback loop. r(t) is the desired process value or "set point", and y(t) is the measured process value.)
 
 
 ## [Fundamental Operation](https://en.wikipedia.org/wiki/PID_controller)
 
 A PID controller continuously calculates an error value {\displaystyle e(t)} e(t) as the difference between a desired setpoint and a measured process variable and applies a correction based on proportional, integral, and derivative terms. The controller attempts to minimize the error over time by adjustment of a control variable {\displaystyle u(t)} u(t), such as the position of a control valve, a damper, or the power supplied to a heating element, to a new value determined by a weighted sum:
 
-{\displaystyle u(t)=K_{\text{p}}e(t)+K_{\text{i}}\int _{0}^{t}e(\tau )\,d\tau +K_{\text{d}}{\frac {de(t)}{dt}},} {\displaystyle u(t)=K_{\text{p}}e(t)+K_{\text{i}}\int _{0}^{t}e(\tau )\,d\tau +K_{\text{d}}{\frac {de(t)}{dt}},}
-where {\displaystyle K_{\text{p}}} {\displaystyle K_{\text{p}}}, {\displaystyle K_{\text{i}}} {\displaystyle K_{\text{i}}}, and {\displaystyle K_{\text{d}}} {\displaystyle K_{\text{d}}}, all non-negative, denote the coefficients for the proportional, integral, and derivative terms, respectively (sometimes denoted P, I, and D). In this model:
+![PIDformula](PIDformula.png)
+
+In this model:
 
 * P accounts for present values of the error. For example, if the error is large and positive, the control output will also be large and positive.
 * I accounts for past values of the error. For example, if the current output is not sufficiently strong, the integral of the error will accumulate over time, and the controller will respond by applying a stronger action.
