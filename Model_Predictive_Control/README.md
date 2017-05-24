@@ -1,8 +1,36 @@
 # Model Predictive Control 
 
-Implement Model Predictive Control to drive the car around the track
+Implement Model Predictive Control to drive the car around the track. ([source for notes below ](https://www.udacity.com/drive))
+
+![laketrack](images/laketrack.png)
+
+(Displaying the MPC trajectory path in green, and the polynomial fitted reference path in yellow.)
+
+* `DATA.md` - description of the data sent back from the simulator
+* `lake_track_waypoints.csv` file has the waypoints of the lake track and can be used to fit polynomials and points and see of how well the model tracks curve
+* `quizzes` - quizzes for vehicle models and model predictive control sections
+* `src` - MPC implementation
+
+
+## Kinematic vs Dynamic Models
+                   
+:-------------------------:|:-------------------------:
+<img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Kinematic.png" width="425" height="300">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Dynamic.png" width="425" height="300"> 
+The vehicle is forced off the road due to forces not accounted for. | The dynamic model is able to stay on the road, knowledge of forces is embedded in the model.  
+
+Kinematic models are simplifications of dynamic models that ignore tire forces, gravity, and mass. This simplification reduces the accuracy of the models, but it also makes them more tractable. At low and moderate speeds, kinematic models often approximate the actual vehicle dynamics.
+
+Dynamic models aim to embody the actual vehicle dynamics as closely as possible. They might encompass tire forces, longitudinal and lateral forces, inertia, gravity, air resistance, drag, mass, and the geometry of the vehicle. Not all dynamic models are created equal! Some may consider more of these factors than others. Advanced dynamic models even take internal vehicle forces into account - for example, how responsive the chassis suspension is.
+
+* [Kinematic and Dynamic Vehicle Models for Autonomous Driving Control Design](http://www.me.berkeley.edu/~frborrel/pdfpub/IV_KinematicMPC_jason.pdf)
+* [Pacejka Tire Model](http://www.theoryinpracticeengineering.com/resources/tires/pacejka87.pdf): also known as the Magic Tire Formula.
+
 
 ## PID vs MPC Control
+
+In a real car, an actuation command won't execute instantly - there will be a delay as the command propagates through the system. A realistic delay might be on the order of 100 milliseconds.
+
+This is a problem called "latency", and it's a difficult challenge for some controllers - like a PID controller - to overcome. But a Model Predictive Controller can adapt quite well because we can model this latency in the system.
 
 ### PID Controller
 
@@ -17,11 +45,15 @@ A Model Predictive Controller can plan well into the future, on the order of sec
 Thus, MPC can deal with latency much more effectively than a PID controller, which becomes essential in realtime scenarios.
 
 
+## Overview
+
 Model Predictive Control (MPC) involves simulating actuator inputs. This process is done several times resulting in several trajectories. The trajectory associated with the lowest cost is chosen. The simulated trajectories are based off the initial state and the model's dynamics, constraints and, of course, the cost function.
 
-Ultimately only the initial actuations resulting the lowest cost trajectory are executed This brings the vehicle to a new state (now the initial state) and the process is repeated.
+![MPC](images/MPC.png)
 
-Here is the MPC algorithm:
+Ultimately only the initial actuations resulting the lowest cost trajectory are executed. This brings the vehicle to a new state (now the initial state) and the process is repeated.
+
+Here is the MPC algorithm - 
 
 Setup:
 
@@ -31,8 +63,18 @@ Setup:
 
 Loop:
 
-1. At any given time the current state is the input to MPC.
-2. The initial state of the trajectory should be constrained to the state passed into the MPC procedure.
-3. Call the optimization solver. Given the passed state MPC will simulate taking several trajectories and return the one with the lowest cost. The solver we'll use is called [Ipopt](https://projects.coin-or.org/Ipopt).
+1. We pass the current state as the initial state to the model predictive controller.
+2. We call the optimization solver. Given the initial state, the solver will return the vector of control inputs that minimizes the cost function. The solver we'll use is called [Ipopt](https://projects.coin-or.org/Ipopt).
+3. We apply the first control input to the vehicle.
 4. Back to 1.
+
+### Implementation
+
+1. Describe the model in detail, includes the state, actuators and update equations.
+
+2. Discuss the reasoning behind the chosen N (timestep length) and dt (timestep frequency) values.
+
+3. Discuss the polynomial fitting to waypoints and MPC preprocessing (waypoints, the vehicle state, and/or actuators).
+
+4. Discuss how to deal with latency.
 
