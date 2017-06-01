@@ -16,9 +16,10 @@ Implement Model Predictive Control to drive the car around the track.
 
 ## Kinematic vs Dynamic Models
                    
-<img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Kinematic.png" width="425" height="300">  |  <img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Dynamic.png" width="425" height="300">
-:-------------------------:|:-------------------------:
-The vehicle is forced off the road due to forces not accounted for. | The dynamic model is able to stay on the road, knowledge of forces is embedded in the model.   
+<img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Kinematic.png" width="425" height="300"> | <img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Dynamic.png" width="425" height="300"> 
+:--------- | :---------
+The vehicle is forced off the road due to forces not accounted for.                          | The dynamic model is able to stay on the road, knowledge of forces is embedded in the model. 
+
 
 Kinematic models are simplifications of dynamic models that ignore tire forces, gravity, and mass. This simplification reduces the accuracy of the models, but it also makes them more tractable. At low and moderate speeds, kinematic models often approximate the actual vehicle dynamics.
 

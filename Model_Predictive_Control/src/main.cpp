@@ -101,10 +101,38 @@ int main() {
           double steer_value;
           double throttle_value;
 
+          Eigen::VectorXd state(mpc.N_STATES);
+          Eigen::VectorXd coeffs;
+          Eigen::VectorXd eigen_ptsx(ptsx.size());
+          Eigen::VectorXd eigen_ptsy(ptsy.size());
+
+          /* The points are feed in map coords, transform them into car coords */
+          mpc.coord_transform(ptsx, ptsy, px, py, psi, eigen_ptsx, eigen_ptsy);
+          /* find the coefs that fit a 3rd order poly */
+          coeffs = polyfit(eigen_ptsx, eigen_ptsy, 3);
+          /* Evaluate the newly created poly */
+          for (int i = 0; i < ptsx.size(); ++i)
+          {
+            ptsy[i] = polyeval(coeffs, ptsx[i]);
+          }
+
+          double cte = polyeval(coeffs, 0);
+          double epsi =  - atan(double(coeffs[1]));
+          /* As we rotated and translated all the points to set our coords as 0,0. x,y are always 0 */
+          state << 0, 0, 0, v, cte, epsi;
+
+          auto act =  mpc.Solve(state, coeffs);
+
+          const int latency_index = 2;
+
+          double steer_value = act.delta.at(latency_index);
+          double throttle_value= act.a.at(latency_index);
+
+
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value;
+          msgJson["steering_angle"] = rad2deg(-steer_value) / 25.0; 
           msgJson["throttle"] = throttle_value;
 
           //Display the MPC predicted trajectory 
@@ -114,12 +142,17 @@ int main() {
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Green line
 
-          msgJson["mpc_x"] = mpc_x_vals;
-          msgJson["mpc_y"] = mpc_y_vals;
+          msgJson["mpc_x"] = act.x;
+          msgJson["mpc_y"] = act.y;
 
           //Display the waypoints/reference line
           vector<double> next_x_vals;
           vector<double> next_y_vals;
+
+          for (unsigned i=0 ; i < ptsx.size(); ++i) {
+            next_x_vals.push_back(eigen_ptsx(i));
+            next_y_vals.push_back(eigen_ptsy(i));
+          }
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
@@ -151,8 +184,7 @@ int main() {
   });
 
   // We don't need this since we're not using HTTP but if it's removed the
-  // program
-  // doesn't compile :-(
+  // program doesn't compile :-(
   h.onHttpRequest([](uWS::HttpResponse *res, uWS::HttpRequest req, char *data,
                      size_t, size_t) {
     const std::string s = "<h1>Hello world!</h1>";
