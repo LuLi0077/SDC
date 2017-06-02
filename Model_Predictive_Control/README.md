@@ -17,9 +17,9 @@ Implement Model Predictive Control to drive the car around the track.
 ## Kinematic vs Dynamic Models
                    
 <img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Kinematic.png" width="425" height="300"> | <img src="https://github.com/LuLi0077/SDC/blob/master/Model_Predictive_Control/images/Dynamic.png" width="425" height="300"> 
-:--------- | :---------
-The vehicle is forced off the road due to forces not accounted for.                          | The dynamic model is able to stay on the road, knowledge of forces is embedded in the model. 
+:---------:| :---------: 
 
+The vehicle in the left image is forced off the road due to forces not accounted for. On the right, the dynamic model is able to stay on the road, knowledge of forces is embedded in the model. 
 
 Kinematic models are simplifications of dynamic models that ignore tire forces, gravity, and mass. This simplification reduces the accuracy of the models, but it also makes them more tractable. At low and moderate speeds, kinematic models often approximate the actual vehicle dynamics.
 
@@ -75,9 +75,31 @@ Loop:
 
 1. Describe the model in detail, includes the state, actuators and update equations.
 
+To keep track of the state of a vehicle, we need:
+* x, y - the position of the vehicle in the map coordinate
+* psi - the orientation of the vehicle
+* v - the velocity of the vehicle
+* cte - (cross track error) the error between the center of the road and the vehicle's position 
+* epsi - (orientation error) current orientation error and the change in error caused by the vehicle's movement
+
+To derive a model that captures how the states evolves over time we use an actuator. Most cars have three actuators: the steering wheel, the throttle pedal and the brake pedal. For simplicity we'll consider the throttle and brake pedals as a singular actuator, with negative values signifying braking and positive values signifying acceleration.
+
+To predict how the state changes over time based on the previous state and current actuator inputs: 
+
+![equation](images/equation.png)
+
+![cte](images/cte.png)
+
+![epsi](images/epsi.png)
+
+A typical autonomous vehicle system starts with the perception system, which estimates the state of the surrounding environment, including landmarks and vehicles and pedestrians. The localization block compares that model to a map to figure out where the vehicle is. The path planning block charts a trajectory, using the environmental model, the map, and vehicle location. Finally, the control loop applies the actuators to follow this trajectory. Typically, the path planning block passes the reference trajectory to the control block as a polynomial. Third-degree polynomials are common since they can fit most roads.
+
+
 2. Discuss the reasoning behind the chosen N (timestep length) and dt (timestep frequency) values.
 
+
 3. Discuss the polynomial fitting to waypoints and MPC preprocessing (waypoints, the vehicle state, and/or actuators).
+
 
 4. Discuss how to deal with latency.
 
