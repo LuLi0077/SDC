@@ -12,8 +12,6 @@
 // for convenience
 using json = nlohmann::json;
 
-size_t N = 10;
-
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
@@ -98,27 +96,33 @@ int main() {
           Eigen::VectorXd state(6);
           Eigen::VectorXd coeffs;
           Eigen::VectorXd eigen_ptsx(ptsx.size());
-          Eigen::VectorXd eigen_ptsy(ptsy.size());          
+          Eigen::VectorXd eigen_ptsy(ptsy.size()); 
+          vector<double> next_x_vals;
+          vector<double> next_y_vals;         
 
           for (int i = 0; i < ptsx.size(); ++i) {
-            eigen_ptsx[i] = (ptsx[i] - px) * cos(-psi) - (ptsy[i] - py) * sin(-psi);
-            eigen_ptsy[i] = (ptsx[i] - px) * sin(-psi) + (ptsy[i] - py) * cos(-psi);
+            double dx = ptsx[i] - px;
+            double dy = ptsy[i] - py;
+            eigen_ptsx[i] = dx * cos(psi) + dy * sin(psi);
+            eigen_ptsy[i] = -dx * sin(psi) + dy * cos(psi);
+            next_x_vals.push_back(eigen_ptsx(i));
+            next_y_vals.push_back(eigen_ptsy(i));
           }
 
           coeffs = polyfit(eigen_ptsx, eigen_ptsy, 3);
           double cte = polyeval(coeffs, 0);
           double epsi = -atan(coeffs[1] + 2 * px * coeffs[2] + 3 * px * px * coeffs[3]);
+          //double epsi = -atan(coeffs[1]);
 
           state << 0, 0, 0, v, cte, epsi;
 
           auto move =  mpc.Solve(state, coeffs);
 
-          double steer = move[0] / deg2rad(25);
-          double throttle = move[1];
+          double steer = move[1] / deg2rad(25);
+          double throttle = move[2];
 
           json msgJson;
-          // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
-          // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
+
           msgJson["steering_angle"] = -steer; 
           msgJson["throttle"] = throttle;
 
@@ -126,9 +130,10 @@ int main() {
           vector<double> mpc_x_vals;
           vector<double> mpc_y_vals;
 
-          for(int i = 0; i < N; i++) {
-            mpc_x_vals.push_back(move[2+i]);
-            mpc_y_vals.push_back(move[2+N+i]);
+          int n = move[0];
+          for(int i = 0; i < n; i++) {
+            mpc_x_vals.push_back(move[3+i]);
+            mpc_y_vals.push_back(move[3+n+i]);
           }
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
@@ -137,17 +142,8 @@ int main() {
           msgJson["mpc_y"] = mpc_y_vals;
 
           //Display the waypoints/reference line
-          vector<double> next_x_vals;
-          vector<double> next_y_vals;
-
-          for (unsigned i=0 ; i < ptsx.size(); ++i) {
-            next_x_vals.push_back(eigen_ptsx(i));
-            next_y_vals.push_back(eigen_ptsy(i));
-          }
-
           // add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
-
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
 
