@@ -4,21 +4,62 @@
 #include <cppad/ipopt/solve.hpp>
 #include "Eigen-3.3/Eigen/Core"
 #include "Eigen-3.3/Eigen/QR"
-//#include "matplotlibcpp.h"
 
-//namespace plt = matplotlibcpp;
+//**********************************************************************************************
+// Describe the model in detail, includes the state, actuators and update equations:
+//
+// The state includes:
+// * x, y: the position of the vehicle in the map coordinate
+// * psi: the orientation of the vehicle
+// * v: the velocity of the vehicle
+// * cte: cross track error - the error between the center of the road and the vehicle's position
+// * epsi: orientation error - current orientation error and the change in error caused by the vehicle's movement
+//
+// Actuators include:
+// * delta: steering angle
+// * a: throttle
+//
+// For simplicity, a kinematic model is used instead of dynamic model. 
+// The update equations for the model are:
+    // fg[2 + x_start + i] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
+    // fg[2 + y_start + i] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
+    // fg[2 + psi_start + i] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
+    // fg[2 + v_start + i] = v1 - (v0 + a0 * dt);
+    // fg[2 + cte_start + i] = cte1 - ((f0 - y0) + (v0 * CppAD::sin(epsi0) * dt));
+    // fg[2 + epsi_start + i] = epsi1 - ((psi0 - psides0) + v0 * delta0 / Lf * dt);
+//**********************************************************************************************
+//
+// Discuss the reasoning behind the chosen N and dt values:
+//
+// Tested N within [8, 25] and dt within [0.05, 0.1]. N determines the number of variables
+// optimized and dt is the frequency between actuations. If N is too small, we don't have 
+// enough data points; too large, it gets too far into the future where predictions are 
+// less certain. Similarly, if dt is too large, we can't approximate a continuous reference 
+// trajectory; too small, the changes are minimal and updates are unnecessary. Here, I 
+// choosed the minimum N and maximum dt possible for car to stay on track.
+//**********************************************************************************************
+//
+// Provides details on how MPC handles a 100 millisecond latency:
+//
+// Account for latency is implemented in `main.cpp` (as below) simply by projecting current
+// state values one latency timestep ahead:    
+    // const double latency = .1 ;
+    // px = v * latency;
+    // psi = -v * steer_angle * latency / 2.67;
+
+    // double cte = polyeval(coeffs, px);
+    // double epsi = -atan(coeffs[1] + 2 * px * coeffs[2] + 3 * px * px * coeffs[3]);
+
+    // state << px, 0, psi, v, cte, epsi;
+    // auto move =  mpc.Solve(state, coeffs);
+//**********************************************************************************************
+
 
 using CppAD::AD;
 
 // Set the timestep length and duration
-size_t N = 10;
+size_t N = 8;
 double dt = 0.08;
-
-// **steering angle turns volatile half way through the loop 
-// **reducing N only made it worse
-//size_t N = 10; double dt = 0.05;
-//size_t N = 20; double dt = 0.05;
-
 
 // This value assumes the model presented in the classroom is used.
 //
@@ -33,10 +74,10 @@ double dt = 0.08;
 const double Lf = 2.67;
 
 // Both the reference cross track and orientation errors are 0.
-// The reference velocity is set to 40 mph.
+// The reference velocity is set to 65 mph.
 double ref_cte = 0;
 double ref_epsi = 0;
-double ref_v = 50;
+double ref_v = 65;
 
 // The solver takes all the state variables and actuator
 // variables in a singular vector. Thus, we should to establish
@@ -81,7 +122,7 @@ class FG_eval {
     // Minimize the value gap between sequential actuations.
     for (int i = 0; i < N - 2; i++) {
       // tuning the steering value in the cost function results in a smoother steering transitions
-      fg[0] += 1000*CppAD::pow(vars[delta_start + i + 1] - vars[delta_start + i], 2);
+      fg[0] += 500*CppAD::pow(vars[delta_start + i + 1] - vars[delta_start + i], 2);
       fg[0] += CppAD::pow(vars[a_start + i + 1] - vars[a_start + i], 2);
       //fg[0] += CppAD::pow(vars[cte_start + i + 1] - vars[cte_start+i], 2);
     }
@@ -124,12 +165,6 @@ class FG_eval {
       AD<double> epsi1 = vars[epsi_start + i + 1];
 
       // The equations for the model:
-      // x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
-      // y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
-      // psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
-      // v_[t+1] = v[t] + a[t] * dt
-      // cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
-      // epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
       fg[2 + x_start + i] = x1 - (x0 + v0 * CppAD::cos(psi0) * dt);
       fg[2 + y_start + i] = y1 - (y0 + v0 * CppAD::sin(psi0) * dt);
       fg[2 + psi_start + i] = psi1 - (psi0 + v0 * delta0 / Lf * dt);
@@ -153,12 +188,19 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   typedef CPPAD_TESTVECTOR(double) Dvector;
 
   // Set the number of model variables (includes both states and inputs).
+    // the position of the vehicle in the map coordinate
   double x = state[0];
   double y = state[1];
+    // the orientation of the vehicle
   double psi = state[2];
+    // the velocity of the vehicle
   double v = state[3];
+    // (cross track error) the error between the center of the road and the vehicle's position
   double cte = state[4];
+    // (orientation error) current orientation error and the change in error caused by the vehicle's movement
   double epsi = state[5];
+
+  // Set the number of variables
   size_t n_vars = N * 6 + (N - 1) * 2;
 
   // Set the number of constraints
@@ -250,7 +292,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   // Cost
   auto cost = solution.obj_value;
-  std::cout << "Cost " << cost << std::endl;
+  //std::cout << "Cost " << cost << std::endl;
 
   vector<double> out;
   out.push_back(N);

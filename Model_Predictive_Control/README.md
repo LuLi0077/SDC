@@ -99,7 +99,7 @@ A typical autonomous vehicle system starts with the perception system, which est
 
 The prediction horizon is the duration over which future predictions are made, refer to as T. T is the product of two other variables, N and dt. N is the number of timesteps in the horizon. dt is how much time elapses between actuations. In the case of driving a car, T should be a few seconds, at most. Beyond that horizon, the environment will change enough that it won't make sense to predict any further into the future.
 
-- Number of timesteps: the goal of MPC is to optimize the control inputs: [δ,a]. An optimizer will tune these inputs until a low cost vector of control inputs is found. The length of this vector is determined by N: [δ1, a1, δ​2, a2,..., δN−1, aN−1]. Thus N determines the number of variables the optimized by MPC. 
+- Number of timesteps: the goal of MPC is to optimize the control inputs: [δ,a]. An optimizer will tune these inputs until a low cost vector of control inputs is found. The length of this vector is determined by N: [δ1, a1, δ​2, a2,..., δN−1, aN−1]. Thus N determines the number of variables optimized by MPC. 
 
 - Timestep duration: MPC attempts to approximate a continues reference trajectory by means of discrete paths between actuations. Larger values of dt result in less frequent actuations, which makes it harder to accurately approximate a continuous reference trajectory. This is sometimes called "discretization error".
 

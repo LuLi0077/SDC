@@ -75,7 +75,7 @@ int main() {
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
     string sdata = string(data).substr(0, length);
-    cout << sdata << endl;
+    //cout << sdata << endl;
     if (sdata.size() > 2 && sdata[0] == '4' && sdata[1] == '2') {
       string s = hasData(sdata);
       if (s != "") {
@@ -89,6 +89,7 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
+          double steer_angle = j[1]["steering_angle"];
 
           /*
           * Calculate steeering angle and throttle using MPC.
@@ -109,12 +110,19 @@ int main() {
             next_y_vals.push_back(eigen_ptsy(i));
           }
 
-          coeffs = polyfit(eigen_ptsx, eigen_ptsy, 3);
-          double cte = polyeval(coeffs, 0);
-          double epsi = -atan(coeffs[1] + 2 * px * coeffs[2] + 3 * px * px * coeffs[3]);
-          //double epsi = -atan(coeffs[1]);
+          // Fit polynomial
+          coeffs = polyfit(eigen_ptsx, eigen_ptsy, 3);     
 
-          state << 0, 0, 0, v, cte, epsi;
+          // Account for latency     
+          const double latency = .1 ;
+          px = v * latency;
+          psi = -v * steer_angle * latency / 2.67;
+
+          // Calculate error
+          double cte = polyeval(coeffs, px);
+          double epsi = -atan(coeffs[1] + 2 * px * coeffs[2] + 3 * px * px * coeffs[3]);
+
+          state << px, 0, psi, v, cte, epsi;
 
           auto move =  mpc.Solve(state, coeffs);
 
