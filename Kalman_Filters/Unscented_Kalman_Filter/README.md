@@ -21,6 +21,13 @@ Sample Data 1              |  Sample Data 2
   * Windows: recommend using [MinGW](http://www.mingw.org/)
 
 
+### Catch the Run Away Car
+
+In [Artificial Intelligence for Robotics](https://classroom.udacity.com/courses/cs373/lessons/672478550/concepts/7831886840923), Sebastian's final project was to catch a run away robot moving in a continuous circle with constant velocity. This extra challenge revisits that same problem but with the implementation of an Unscented Kalman Filter.
+
+The run away car in this case will be being sensed by a stationary sensor, that is able to measure both noisy lidar and radar data. The capture vehicle will need to use these measurements to close in on the run away car. To capture the the run away car the capture vehicle needs to come within .1 unit distance of its position. However the capture car and the run away car have the same max velocity, so if the capture vehicle wants to catch the car, it will need to predict where the car will be ahead of time.
+
+
 ### Resources
 
 * [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html)
